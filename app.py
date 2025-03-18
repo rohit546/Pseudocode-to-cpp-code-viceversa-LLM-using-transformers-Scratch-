@@ -5,6 +5,34 @@ import pickle
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.preprocessing.text import Tokenizer
 
+
+st.markdown("""
+    <style>
+    .main-title {
+        text-align: center;
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: white;
+        background: linear-gradient(90deg, #4A90E2, #50E3C2);
+        padding: 15px;
+        border-radius: 10px;
+    }
+    .stTextArea textarea {
+        font-size: 16px;
+    }
+    .convert-btn {
+        background-color: #4A90E2;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        padding: 10px;
+        border-radius: 8px;
+    }
+    .convert-btn:hover {
+        background-color: #50E3C2;
+    }
+    </style>
+""", unsafe_allow_html=True)
 # Define Transformer Components
 class MultiHeadAttention(tf.keras.layers.Layer):
     def __init__(self, d_model, num_heads):
@@ -101,24 +129,14 @@ def generate_output(input_text, tokenizer_input, tokenizer_output, model, max_le
     output_tokens = [tokenizer_output.index_word.get(idx, '') for idx in pred_indices if idx > 0]
     return ' '.join(output_tokens).replace('<sos>', '').replace('<eos>', '').strip()
 
-# Streamlit UI
-st.set_page_config(page_title="Pseudocode ⇄ C++ Converter", page_icon="🔄", layout="wide")
-st.title("🚀 Pseudocode ⇄ C++ Converter")
-st.markdown("Convert between **Pseudocode** and **C++** seamlessly using a Transformer model.")
-
-col1, col2 = st.columns([3, 2])
-with col1:
-    option = st.radio("Choose Conversion Type:", ["Pseudocode ➝ C++", "C++ ➝ Pseudocode"], horizontal=True)
-    user_input = st.text_area("✍️ Enter Your Code:", height=200)
-    if st.button("🚀 Convert", use_container_width=True):
-        if user_input.strip():
-            output = generate_output(user_input, pseudocode_tokenizer, cpp_tokenizer, pseudo_to_cpp_model) if option == "Pseudocode ➝ C++" else generate_output(user_input, cpp_tokenizer, pseudocode_tokenizer, cpp_to_pseudo_model)
-        else:
-            output = "⚠️ Please enter some code to convert!"
-with col2:
-    if 'output' in locals():
-        st.text_area("✅ Converted Code:", output, height=200)
-        st.download_button("📥 Download Output", output, file_name="converted_code.txt", use_container_width=True)
+st.markdown('<div class="main-title">🔄 Pseudocode <> C++ Converter</div>', unsafe_allow_html=True)
+option = st.radio("Choose Conversion Type:", ("Pseudocode ➝ C++", "C++ ➝ Pseudocode"), horizontal=True)
+user_input = st.text_area("Enter Code:")
+if st.button("Convert", key="convert_btn", help="Click to convert code!"):
+    with st.spinner("Processing..."):
+        output = generate_output(user_input, pseudocode_tokenizer, cpp_tokenizer, pseudo_to_cpp_model) if option == "Pseudocode ➝ C++" else generate_output(user_input, cpp_tokenizer, pseudocode_tokenizer, cpp_to_pseudo_model)
+    st.text_area("Converted Code:", output, height=200)
+    st.download_button("Download Output", output, file_name="converted_code.txt")
 
 
 # Footer
