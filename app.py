@@ -136,12 +136,14 @@ def generate_output(input_text, tokenizer_input, tokenizer_output, model, max_le
     output_tokens = [tokenizer_output.index_word.get(idx, '') for idx in pred_indices if idx > 0]
     return ' '.join(output_tokens).replace('<sos>', '').replace('<eos>', '').strip()
 
-st.markdown('<div class="main-title">🔄 Pseudocode <> C++ Converter</div>', unsafe_allow_html=True)
-option = st.radio("Choose Conversion Type:", ("Pseudocode ➝ C++", "C++ ➝ Pseudocode"), horizontal=True)
+st.title("🔄 Pseudocode <> C++ Converter")
+option = st.radio("Choose Conversion Type:", ("Pseudocode ➝ C++", "C++ ➝ Pseudocode"))
 user_input = st.text_area("Enter Code:")
-if st.button("Convert", key="convert_btn", help="Click to convert code!"):
-    with st.spinner("Processing..."):
-        output = generate_output(user_input, pseudocode_tokenizer, cpp_tokenizer, pseudo_to_cpp_model) if option == "Pseudocode ➝ C++" else generate_output(user_input, cpp_tokenizer, pseudocode_tokenizer, cpp_to_pseudo_model)
+if st.button("Convert"):
+    if option == "Pseudocode ➝ C++":
+        output = generate_output(user_input, pseudocode_tokenizer, cpp_tokenizer, pseudo_to_cpp_model)
+    else:
+        output = generate_output(user_input, cpp_tokenizer, pseudocode_tokenizer, cpp_to_pseudo_model)
     st.text_area("Converted Code:", output, height=200)
     st.download_button("Download Output", output, file_name="converted_code.txt")
 
