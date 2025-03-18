@@ -40,18 +40,6 @@ st.markdown("""
     }
     </style>
 """, unsafe_allow_html=True)
-
-# Sidebar with extra features
-st.sidebar.title("🚀 Extra Features")
-st.sidebar.markdown("✅ Code Beautifier")
-st.sidebar.markdown("✅ Syntax Highlighter")
-st.sidebar.markdown("✅ AI-powered Debugging")
-st.sidebar.markdown("✅ Code Complexity Analysis")
-st.sidebar.markdown("✅ Export to PDF & Markdown")
-
-# Info box
-st.markdown('<div class="info-box">🔍 This tool converts pseudocode to C++ and vice versa using Transformer models. Enter your code and hit convert!</div>', unsafe_allow_html=True)
-
 # Define Transformer Components
 class MultiHeadAttention(tf.keras.layers.Layer):
     def __init__(self, d_model, num_heads):
