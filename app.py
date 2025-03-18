@@ -80,7 +80,7 @@ class Transformer(tf.keras.Model):
     def call(self, inputs):
         enc_output = self.encoder(self.embedding(inputs))
         dec_output = self.decoder(self.embedding(inputs), enc_output)
-        return self.final_layer(dec_output
+        return self.final_layer(dec_output)
 # Load Tokenizers
 with open('pseudocode_to_cpp_tokenizer.pkl', 'rb') as f:
     pseudocode_tokenizer = pickle.load(f)
